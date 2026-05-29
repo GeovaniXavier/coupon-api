@@ -1,6 +1,7 @@
-package com.geovani.estudos.exception;
+package com.geovani.estudos.handler;
 
 import com.geovani.estudos.domain.exception.CouponAlreadyDeletedException;
+import com.geovani.estudos.exception.CouponNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

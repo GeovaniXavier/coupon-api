@@ -1,7 +1,5 @@
 package com.geovani.estudos.domain;
 
-import com.geovani.estudos.domain.exception.CouponAlreadyDeletedException;
-import com.geovani.estudos.domain.CouponDomain;
 import org.junit.jupiter.api.Test;
 
 import java.time.OffsetDateTime;
@@ -80,16 +78,16 @@ class CouponDomainTest {
     }
 
     @Test
-    void shouldSoftDeleteCoupon() {
+    void shouldMarkAsDeletedCoupon() {
         CouponDomain coupon = CouponDomain.create("ABC123", "desc", 1.0, FUTURE_DATE, false);
-        CouponDomain deleted = coupon.softDelete();
+        CouponDomain deleted = coupon.markAsDeleted();
         assertEquals(CouponStatus.DELETED, deleted.getStatus());
     }
 
     @Test
     void shouldThrowWhenDeletingAlreadyDeletedCoupon() {
         CouponDomain coupon = CouponDomain.create("ABC123", "desc", 1.0, FUTURE_DATE, false);
-        CouponDomain deleted = coupon.softDelete();
-        assertThrows(IllegalStateException.class, deleted::softDelete);
+        CouponDomain deleted = coupon.markAsDeleted();
+        assertThrows(IllegalStateException.class, deleted::markAsDeleted);
     }
 }

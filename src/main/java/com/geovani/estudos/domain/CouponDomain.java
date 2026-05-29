@@ -14,7 +14,7 @@ public class CouponDomain {
     private final boolean published;
     private final boolean redeemed;
 
-    public CouponDomain(UUID id, String code, String description, Double discountValue, OffsetDateTime expirationDate, CouponStatus status, boolean published, boolean redeemed) {
+    private CouponDomain(UUID id, String code, String description, Double discountValue, OffsetDateTime expirationDate, CouponStatus status, boolean published, boolean redeemed) {
         this.id = id;
         this.code = code;
         this.description = description;
@@ -42,7 +42,29 @@ public class CouponDomain {
         );
     }
 
-    public CouponDomain softDelete() {
+    public static CouponDomain restore(
+            UUID id,
+            String code,
+            String description,
+            Double discountValue,
+            OffsetDateTime expirationDate,
+            CouponStatus status,
+            boolean published,
+            boolean redeemed
+    ) {
+        return new CouponDomain(
+                id,
+                code,
+                description,
+                discountValue,
+                expirationDate,
+                status,
+                published,
+                redeemed
+        );
+    }
+
+    public CouponDomain markAsDeleted() {
         if (this.status == CouponStatus.DELETED) {
             throw new IllegalStateException("O cupom já foi deletado.");
         }
@@ -75,14 +97,37 @@ public class CouponDomain {
         }
     }
 
-    public UUID getId() { return id; }
-    public String getCode() { return code; }
-    public String getDescription() { return description; }
-    public Double getDiscountValue() { return discountValue; }
-    public OffsetDateTime getExpirationDate() { return expirationDate; }
-    public CouponStatus getStatus() { return status; }
-    public boolean isPublished() { return published; }
-    public boolean isRedeemed() { return redeemed; }
+    public UUID getId() {
+        return id;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Double getDiscountValue() {
+        return discountValue;
+    }
+
+    public OffsetDateTime getExpirationDate() {
+        return expirationDate;
+    }
+
+    public CouponStatus getStatus() {
+        return status;
+    }
+
+    public boolean isPublished() {
+        return published;
+    }
+
+    public boolean isRedeemed() {
+        return redeemed;
+    }
 
     @Override
     public boolean equals(Object o) {

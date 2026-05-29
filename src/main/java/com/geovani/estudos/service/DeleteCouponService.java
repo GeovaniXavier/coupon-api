@@ -21,7 +21,7 @@ public class DeleteCouponService {
     public void execute(UUID id) {
         CouponEntity entity = couponRepository.findById(id)
                 .orElseThrow(() -> new CouponNotFoundException(id));
-        CouponDomain domain = CouponMapper.toDomain(entity).softDelete();
+        CouponDomain domain = CouponMapper.toDomain(entity).markAsDeleted();
         CouponEntity deleted = CouponMapper.toEntity(domain);
         couponRepository.save(deleted);
     }

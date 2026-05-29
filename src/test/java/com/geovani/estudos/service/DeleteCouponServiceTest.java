@@ -2,7 +2,6 @@ package com.geovani.estudos.service;
 
 import com.geovani.estudos.domain.CouponDomain;
 import com.geovani.estudos.domain.CouponStatus;
-import com.geovani.estudos.domain.exception.CouponAlreadyDeletedException;
 import com.geovani.estudos.exception.CouponNotFoundException;
 import com.geovani.estudos.repository.CouponRepository;
 import com.geovani.estudos.entity.CouponEntity;
@@ -40,7 +39,7 @@ class DeleteCouponServiceTest {
 
         deleteCouponService.execute(id);
 
-        CouponDomain deleted = CouponMapper.toDomain(couponEntity).softDelete();
+        CouponDomain deleted = CouponMapper.toDomain(couponEntity).markAsDeleted();
         assertEquals(CouponStatus.DELETED, deleted.getStatus());
         verify(couponRepository, times(1)).save(any(CouponEntity.class));
     }
@@ -57,7 +56,7 @@ class DeleteCouponServiceTest {
     @Test
     void shouldThrowWhenCouponIsAlreadyDeleted() {
         CouponDomain couponDomain = CouponDomain.create("ABC123", "desc", 1.0, OffsetDateTime.now().plusDays(30), false);
-        CouponDomain deletedDomain = couponDomain.softDelete();
+        CouponDomain deletedDomain = couponDomain.markAsDeleted();
         CouponEntity deletedEntity = CouponMapper.toEntity(deletedDomain);
         UUID id = deletedEntity.getId();
         when(couponRepository.findById(id)).thenReturn(Optional.of(deletedEntity));

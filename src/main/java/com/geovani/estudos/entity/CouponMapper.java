@@ -24,7 +24,7 @@ public class CouponMapper {
     }
 
     public static CouponDomain toDomain(CouponEntity entity) {
-        return new CouponDomain(
+        return CouponDomain.restore(
                 entity.getId(),
                 entity.getCode(),
                 entity.getDescription(),
