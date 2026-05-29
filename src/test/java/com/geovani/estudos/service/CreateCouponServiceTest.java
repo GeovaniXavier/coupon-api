@@ -2,8 +2,10 @@ package com.geovani.estudos.service;
 
 import com.geovani.estudos.controller.request.CreateCouponRequest;
 import com.geovani.estudos.controller.response.CouponResponse;
-import com.geovani.estudos.domain.Coupon;
+import com.geovani.estudos.domain.CouponDomain;
 import com.geovani.estudos.domain.CouponStatus;
+import com.geovani.estudos.entity.CouponEntity;
+import com.geovani.estudos.entity.CouponMapper;
 import com.geovani.estudos.repository.CouponRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,8 +34,9 @@ class CreateCouponServiceTest {
                 "ABC123", "Desconto especial", 1.0,
                 OffsetDateTime.now().plusDays(30), false
         );
-        Coupon coupon = Coupon.create(request.code(), request.description(), request.discountValue(), request.expirationDate(), request.published());
-        when(couponRepository.save(any(Coupon.class))).thenReturn(coupon);
+        CouponDomain couponDomain = CouponDomain.create(request.code(), request.description(), request.discountValue(), request.expirationDate(), request.published());
+        CouponEntity couponEntity = CouponMapper.toEntity(couponDomain);
+        when(couponRepository.save(any(CouponEntity.class))).thenReturn(couponEntity);
 
         CouponResponse response = createCouponService.execute(request);
 
@@ -41,7 +44,7 @@ class CreateCouponServiceTest {
         assertEquals("ABC123", response.code());
         assertEquals(CouponStatus.ACTIVE.name(), response.status());
         assertFalse(response.redeemed());
-        verify(couponRepository, times(1)).save(any(Coupon.class));
+        verify(couponRepository, times(1)).save(any(CouponEntity.class));
     }
 
     @Test
@@ -50,14 +53,15 @@ class CreateCouponServiceTest {
                 "AB#C-123", "desc", 1.0,
                 OffsetDateTime.now().plusDays(30), false
         );
-        Coupon coupon = Coupon.create(request.code(), request.description(), request.discountValue(), request.expirationDate(), request.published());
-        when(couponRepository.save(any(Coupon.class))).thenReturn(coupon);
+        CouponDomain couponDomain = CouponDomain.create(request.code(), request.description(), request.discountValue(), request.expirationDate(), request.published());
+        CouponEntity couponEntity = CouponMapper.toEntity(couponDomain);
+        when(couponRepository.save(any(CouponEntity.class))).thenReturn(couponEntity);
 
         CouponResponse response = createCouponService.execute(request);
 
         assertEquals(6, response.code().length());
         assertEquals("ABC123", response.code());
-        verify(couponRepository, times(1)).save(any(Coupon.class));
+        verify(couponRepository, times(1)).save(any(CouponEntity.class));
     }
 
     @Test
@@ -80,4 +84,3 @@ class CreateCouponServiceTest {
         verify(couponRepository, never()).save(any());
     }
 }
-

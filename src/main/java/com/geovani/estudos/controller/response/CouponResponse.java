@@ -1,6 +1,6 @@
 package com.geovani.estudos.controller.response;
 
-import com.geovani.estudos.domain.Coupon;
+import com.geovani.estudos.domain.CouponDomain;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.UUID;
@@ -32,16 +32,29 @@ public record CouponResponse(
         @Schema(description = "Indica se o cupom foi resgatado", example = "false")
         boolean redeemed
 ) {
-    public static CouponResponse from(Coupon coupon) {
+    public static CouponResponse from(CouponDomain couponDomain) {
         return new CouponResponse(
-                coupon.getId(),
-                coupon.getCode(),
-                coupon.getDescription(),
-                coupon.getDiscountValue(),
-                coupon.getExpirationDate().toString(),
-                coupon.getStatus().name(),
-                coupon.isPublished(),
-                coupon.isRedeemed()
+                couponDomain.getId(),
+                couponDomain.getCode(),
+                couponDomain.getDescription(),
+                couponDomain.getDiscountValue(),
+                couponDomain.getExpirationDate().toString(),
+                couponDomain.getStatus().name(),
+                couponDomain.isPublished(),
+                couponDomain.isRedeemed()
+        );
+    }
+
+    public static CouponResponse fromDomain(com.geovani.estudos.domain.CouponDomain couponDomain) {
+        return new CouponResponse(
+                couponDomain.getId(),
+                couponDomain.getCode(),
+                couponDomain.getDescription(),
+                couponDomain.getDiscountValue(),
+                couponDomain.getExpirationDate().toString(),
+                couponDomain.getStatus().name(),
+                couponDomain.isPublished(),
+                couponDomain.isRedeemed()
         );
     }
 }

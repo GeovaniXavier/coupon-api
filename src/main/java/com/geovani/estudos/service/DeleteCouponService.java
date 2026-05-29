@@ -1,6 +1,8 @@
 package com.geovani.estudos.service;
 
-import com.geovani.estudos.domain.Coupon;
+import com.geovani.estudos.domain.CouponDomain;
+import com.geovani.estudos.entity.CouponEntity;
+import com.geovani.estudos.entity.CouponMapper;
 import com.geovani.estudos.exception.CouponNotFoundException;
 import com.geovani.estudos.repository.CouponRepository;
 import org.springframework.stereotype.Service;
@@ -17,10 +19,10 @@ public class DeleteCouponService {
     }
 
     public void execute(UUID id) {
-        Coupon coupon = couponRepository.findById(id)
+        CouponEntity entity = couponRepository.findById(id)
                 .orElseThrow(() -> new CouponNotFoundException(id));
-        coupon.softDelete();
-        couponRepository.save(coupon);
+        CouponDomain domain = CouponMapper.toDomain(entity).softDelete();
+        CouponEntity deleted = CouponMapper.toEntity(domain);
+        couponRepository.save(deleted);
     }
 }
-

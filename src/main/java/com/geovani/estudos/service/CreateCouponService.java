@@ -2,7 +2,9 @@ package com.geovani.estudos.service;
 
 import com.geovani.estudos.controller.request.CreateCouponRequest;
 import com.geovani.estudos.controller.response.CouponResponse;
-import com.geovani.estudos.domain.Coupon;
+import com.geovani.estudos.domain.CouponDomain;
+import com.geovani.estudos.entity.CouponEntity;
+import com.geovani.estudos.entity.CouponMapper;
 import com.geovani.estudos.repository.CouponRepository;
 import org.springframework.stereotype.Service;
 
@@ -16,14 +18,15 @@ public class CreateCouponService {
     }
 
     public CouponResponse execute(CreateCouponRequest request) {
-        Coupon coupon = Coupon.create(
+        CouponDomain domain = CouponDomain.create(
                 request.code(),
                 request.description(),
                 request.discountValue(),
                 request.expirationDate(),
                 request.published()
         );
-        return CouponResponse.from(couponRepository.save(coupon));
+        CouponEntity entity = CouponMapper.toEntity(domain);
+        CouponEntity saved = couponRepository.save(entity);
+        return com.geovani.estudos.controller.response.CouponResponse.fromDomain(CouponMapper.toDomain(saved));
     }
 }
-

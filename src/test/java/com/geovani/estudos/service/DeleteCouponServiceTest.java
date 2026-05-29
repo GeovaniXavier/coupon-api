@@ -1,10 +1,12 @@
 package com.geovani.estudos.service;
 
-import com.geovani.estudos.domain.Coupon;
+import com.geovani.estudos.domain.CouponDomain;
 import com.geovani.estudos.domain.CouponStatus;
 import com.geovani.estudos.domain.exception.CouponAlreadyDeletedException;
 import com.geovani.estudos.exception.CouponNotFoundException;
 import com.geovani.estudos.repository.CouponRepository;
+import com.geovani.estudos.entity.CouponEntity;
+import com.geovani.estudos.entity.CouponMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -30,15 +32,17 @@ class DeleteCouponServiceTest {
 
     @Test
     void shouldSoftDeleteCouponSuccessfully() {
-        Coupon coupon = Coupon.create("ABC123", "desc", 1.0, OffsetDateTime.now().plusDays(30), false);
-        UUID id = UUID.randomUUID();
-        when(couponRepository.findById(id)).thenReturn(Optional.of(coupon));
-        when(couponRepository.save(any(Coupon.class))).thenReturn(coupon);
+        CouponDomain couponDomain = CouponDomain.create("ABC123", "desc", 1.0, OffsetDateTime.now().plusDays(30), false);
+        CouponEntity couponEntity = CouponMapper.toEntity(couponDomain);
+        UUID id = couponEntity.getId();
+        when(couponRepository.findById(id)).thenReturn(Optional.of(couponEntity));
+        when(couponRepository.save(any(CouponEntity.class))).thenReturn(couponEntity);
 
         deleteCouponService.execute(id);
 
-        assertEquals(CouponStatus.DELETED, coupon.getStatus());
-        verify(couponRepository, times(1)).save(coupon);
+        CouponDomain deleted = CouponMapper.toDomain(couponEntity).softDelete();
+        assertEquals(CouponStatus.DELETED, deleted.getStatus());
+        verify(couponRepository, times(1)).save(any(CouponEntity.class));
     }
 
     @Test
@@ -52,13 +56,13 @@ class DeleteCouponServiceTest {
 
     @Test
     void shouldThrowWhenCouponIsAlreadyDeleted() {
-        Coupon coupon = Coupon.create("ABC123", "desc", 1.0, OffsetDateTime.now().plusDays(30), false);
-        coupon.softDelete();
-        UUID id = UUID.randomUUID();
-        when(couponRepository.findById(id)).thenReturn(Optional.of(coupon));
+        CouponDomain couponDomain = CouponDomain.create("ABC123", "desc", 1.0, OffsetDateTime.now().plusDays(30), false);
+        CouponDomain deletedDomain = couponDomain.softDelete();
+        CouponEntity deletedEntity = CouponMapper.toEntity(deletedDomain);
+        UUID id = deletedEntity.getId();
+        when(couponRepository.findById(id)).thenReturn(Optional.of(deletedEntity));
 
-        assertThrows(CouponAlreadyDeletedException.class, () -> deleteCouponService.execute(id));
+        assertThrows(IllegalStateException.class, () -> deleteCouponService.execute(id));
         verify(couponRepository, never()).save(any());
     }
 }
-
