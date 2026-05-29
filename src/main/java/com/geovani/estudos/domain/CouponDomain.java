@@ -1,5 +1,7 @@
 package com.geovani.estudos.domain;
 
+import com.geovani.estudos.domain.exception.CouponAlreadyDeletedException;
+
 import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.UUID;
@@ -66,9 +68,19 @@ public class CouponDomain {
 
     public CouponDomain markAsDeleted() {
         if (this.status == CouponStatus.DELETED) {
-            throw new IllegalStateException("O cupom já foi deletado.");
+            throw new CouponAlreadyDeletedException("O cupom já foi deletado.");
         }
-        return new CouponDomain(id, code, description, discountValue, expirationDate, CouponStatus.DELETED, published, redeemed);
+
+        return new CouponDomain(
+                id,
+                code,
+                description,
+                discountValue,
+                expirationDate,
+                CouponStatus.DELETED,
+                published,
+                redeemed
+        );
     }
 
     private static String sanitize(String rawCode) {

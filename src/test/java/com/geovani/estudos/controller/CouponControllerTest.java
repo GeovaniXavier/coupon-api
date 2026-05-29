@@ -22,7 +22,8 @@ import java.util.UUID;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(CouponController.class)
 class CouponControllerTest {
@@ -178,11 +179,15 @@ class CouponControllerTest {
     @Test
     void shouldReturn409WhenCouponIsAlreadyDeleted() throws Exception {
         UUID id = UUID.randomUUID();
-        doThrow(new CouponAlreadyDeletedException()).when(deleteCouponService).execute(id);
+
+        doThrow(new CouponAlreadyDeletedException("O cupom já foi deletado."))
+                .when(deleteCouponService)
+                .execute(id);
 
         mockMvc.perform(delete("/coupon/{id}", id))
                 .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.message").value("O cupom já foi deletado."));
+                .andExpect(jsonPath("$.message")
+                        .value("O cupom já foi deletado."));
     }
 
     @Test
