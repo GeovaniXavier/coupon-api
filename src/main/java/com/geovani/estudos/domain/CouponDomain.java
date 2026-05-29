@@ -31,7 +31,7 @@ public class CouponDomain {
         validateDiscountValue(discountValue);
         validateExpirationDate(expirationDate);
         return new CouponDomain(
-                UUID.randomUUID(),
+                null,
                 sanitized.substring(0, 6),
                 description,
                 discountValue,

@@ -4,6 +4,7 @@ import com.geovani.estudos.domain.CouponStatus;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Entity
@@ -23,7 +24,7 @@ public class CouponEntity {
     private Double discountValue;
 
     @Column(name = "expiration_date", nullable = false)
-    private LocalDateTime expirationDate;
+    private OffsetDateTime expirationDate;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
@@ -37,7 +38,7 @@ public class CouponEntity {
 
     public CouponEntity() {}
 
-    // Getters and setters
+
     public UUID getId() { return id; }
     public void setId(UUID id) { this.id = id; }
     public String getCode() { return code; }
@@ -46,8 +47,8 @@ public class CouponEntity {
     public void setDescription(String description) { this.description = description; }
     public Double getDiscountValue() { return discountValue; }
     public void setDiscountValue(Double discountValue) { this.discountValue = discountValue; }
-    public LocalDateTime getExpirationDate() { return expirationDate; }
-    public void setExpirationDate(LocalDateTime expirationDate) { this.expirationDate = expirationDate; }
+    public OffsetDateTime getExpirationDate() { return expirationDate; }
+    public void setExpirationDate(OffsetDateTime expirationDate) { this.expirationDate = expirationDate; }
     public CouponStatus getStatus() { return status; }
     public void setStatus(CouponStatus status) { this.status = status; }
     public boolean isPublished() { return published; }
