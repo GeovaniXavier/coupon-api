@@ -43,7 +43,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(CouponAlreadyDeletedException.class)
     public ResponseEntity<ErrorResponse> handleAlreadyDeleted(final CouponAlreadyDeletedException ex) {
-        log.warn("Cupom já deletado: {}", ex.getMessage());
+        log.warn("Tentativa de deletar cupom já deletado: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(ex.getMessage()));
     }
 
